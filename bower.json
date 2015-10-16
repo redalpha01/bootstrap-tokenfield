@@ -12,6 +12,14 @@
       "homepage": "https://github.com/sliptree"
     }
   ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "doc-assets",
+    "test",
+    "tests"
+  ],
   "homepage": "http://sliptree.github.io/bootstrap-tokenfield/",
   "main": [
     "dist/bootstrap-tokenfield.js",
