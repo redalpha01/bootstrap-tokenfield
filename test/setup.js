@@ -1,19 +1,18 @@
 var jsdom = require('jsdom');
-require('./helpers/jsdom-patch');
 
 before(function (done) {
   jsdom.env({
     html: '<html><body></body></html>',
     done: function (err, window) {
-      
+
       // Set clientTop and clientLeft to 0 so that offset() works
       window.document.documentElement.clientTop = 0;
       window.document.documentElement.clientLeft = 0;
-      
+
       // Expose jQuery and require tokenfield
       window.$ = global.$ = global.jQuery = require('jquery')(window);
       require('../js/bootstrap-tokenfield')(window);
-      
+
       // Globalize window, document, navigator
       global.window = window;
       global.document = window.document;

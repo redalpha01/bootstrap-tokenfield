@@ -13,8 +13,8 @@ module.exports = function (grunt) {
       ' * https://github.com/sliptree/bootstrap-tokenfield',
       ' * Copyright 2013-2014 Sliptree and other contributors; Licensed MIT',
       ' */\n\n'
-    ].join('\n'),    
-    
+    ].join('\n'),
+
     copy: {
       dist: {
         files: {
@@ -61,6 +61,7 @@ module.exports = function (grunt) {
       minify: {
         options: {
           cleancss: true,
+          compress: true,
           report: 'min'
         },
         files: {
@@ -193,7 +194,7 @@ module.exports = function (grunt) {
       //'exec:git_push',
       //'exec:npm_publish',
     ]);
-  });  
+  });
 
   // Build task
   grunt.registerTask('build', ['copy', 'uglify', 'less']);
