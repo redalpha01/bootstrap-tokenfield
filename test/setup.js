@@ -26,7 +26,8 @@ before(function (done) {
       global.TFT = window.TFT = {};
 
       done();
-    }
+    },
+    virtualConsole: jsdom.createVirtualConsole().sendTo(console)
   });
 });
 
