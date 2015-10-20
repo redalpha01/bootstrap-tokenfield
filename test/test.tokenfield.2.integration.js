@@ -1,4 +1,5 @@
 describe('2. Integration tests:', function() {
+  this.timeout(4000);
 
   before(function() {
     require('../node_modules/jquery-simulate-ext/libs/bililiteRange');
@@ -100,6 +101,10 @@ describe('2. Integration tests:', function() {
   });
 
   describe('Keyboard interaction', function() {
+
+    beforeEach(function () {
+        this.$field.data('bs.tokenfield').focus();
+    });
 
     describe("Pressing Ctrl+A", function() {
       before(function() {
@@ -456,9 +461,14 @@ describe('2. Integration tests:', function() {
           this.$wrapper.find('.token')
               .filter(':has(.token-label:contains(blue))').addClass('active');
                   
+          this.$input.is(document.activeElement).must.be.false();
           this.$copyHelper.simulate("key-sequence", { sequence: "{rightarrow}" });
-          this.$field.tokenfield('getTokensList', null, null, true ).must.equal('');
           this.$input.is(document.activeElement).must.be.true();
+          //FIXME: jsDOM problem? need to trigger the focus handler on the $input element, again, so active classes get removed
+          //it is also called internally, but document.activeElement is only set after the handler has been called
+          //normally, document.activeElement should be set, before all handlers are called, which is not the case, here (works in the browsers, though)
+          this.$field.tokenfield('focus');
+          this.$field.tokenfield('getTokensList', null, null, true ).must.equal('');
         });
       });
 
@@ -896,6 +906,7 @@ describe('2. Integration tests:', function() {
         this.$wrapper.find('.token')
             .filter(':has(.token-label:contains(red))').addClass('active');
 
+        this.$field.data('bs.tokenfield').focus();
         this.$copyHelper.simulate("key-sequence", { sequence: "{enter}" });
       });
 
@@ -952,6 +963,7 @@ describe('2. Integration tests:', function() {
         this.$wrapper.find('.token')
             .filter(':has(.token-label:contains(red))').addClass('active');
 
+        this.$field.data('bs.tokenfield').focus();
         this.$copyHelper.simulate("key-sequence", { sequence: "{enter}" });
       });
     });
