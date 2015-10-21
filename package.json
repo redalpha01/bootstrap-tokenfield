@@ -27,12 +27,7 @@
   "bugs": {
     "url": "https://github.com/sliptree/bootstrap-tokenfield/issues"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/jquery/jquery/blob/2.1.0/MIT-LICENSE.txt"
-    }
-  ],
+  "license": "MIT",
   "scripts": {
     "test": "mocha --ui bdd --recursive --reporter spec --require must"
   },
