@@ -59,7 +59,7 @@
         // disallow creation of functions within loops
         'no-loop-func': 2,
         // disallow use of multiple spaces
-        'no-multi-spaces': 0,
+        'no-multi-spaces': 2,
         // disallow use of multiline strings
         'no-multi-str': 2,
         // disallow reassignments of native objects
@@ -141,11 +141,11 @@
         // specify whether double or single quotes should be used in JSX attributes
         'jsx-quotes': 2,
         // enforces spacing between keys and values in object literal properties
-        'key-spacing': 0,
+        'key-spacing': [2, {"beforeColon": false, "afterColon": true}],
         // enforces empty lines around comments
         'lines-around-comment': 0,
         // disallow mixed 'LF' and 'CRLF' as linebreaks
-        'linebreak-style': 0,
+        'linebreak-style': 2,
         // specify the maximum depth callbacks can be nested
         'max-nested-callbacks': 0,
         // require a capital letter for constructors
@@ -161,7 +161,7 @@
         // disallow comments inline after code
         'no-inline-comments': 0,
         // disallow if as the only statement in an else block
-        'no-lonely-if': 0,
+        'no-lonely-if': 2,
         // disallow mixed spaces and tabs for indentation
         'no-mixed-spaces-and-tabs': 2,
         // disallow multiple empty lines
@@ -181,7 +181,10 @@
         // disallow the use of Boolean literals in conditional expressions
         'no-unneeded-ternary': 2,
         // require or disallow padding inside curly braces
-        'object-curly-spacing': 0,
+        'object-curly-spacing': [2, "always", {
+            "objectsInObjects": false,
+            "arraysInObjects": false
+        }],
         // allow just one var statement per function
         'one-var': 0,
         // require assignment operator shorthand where possible or prohibit it entirely
@@ -209,7 +212,7 @@
         // require or disallow space before function opening parenthesis
         'space-before-function-paren': [2, {"anonymous": "always", "named": "never"}],
         // require or disallow spaces inside parentheses
-        'space-in-parens': 0,
+        'space-in-parens': 2,
         // require spaces around operators
         'space-infix-ops': 2,
         // require a space after return, throw, and case
@@ -217,8 +220,7 @@
         // Require or disallow spaces before/after unary operators
         'space-unary-ops': 0,
         // require or disallow a space immediately following the // or /* in a comment
-        'spaced-comment': 0, // Temporarily removed: See below!
-        // 'spaced-comment': [2, 'always', {'exceptions': ['-', '+'], 'markers': ['=', '!', '#.']}], // space here to support gt comments
+        'spaced-comment': [2, 'always', {'exceptions': ['-', '+'], 'markers': ['=', '!', '#.']}],
 
         // require regex literals to be wrapped in parentheses
         'wrap-regex': 0

@@ -11,14 +11,14 @@ module.exports = function (grunt) {
                 files: 'less/**/*',
                 tasks: ['less']
             }
-            //jekyll: {
-            //    files: ['dist/**/*', 'index.html', 'docs-assets/**/*'],
-            //    tasks: ['uglify:docs', 'jekyll']
-            //},
-            //livereload: {
-            //    options: { livereload: true },
-            //    files: ['dist/**/*'],
-            //}
+            // jekyll: {
+            //     files: ['dist/**/*', 'index.html', 'docs-assets/**/*'],
+            //     tasks: ['uglify:docs', 'jekyll']
+            // },
+            // livereload: {
+            //     options: { livereload: true },
+            //     files: ['dist/**/*'],
+            // }
         }
     });
 };

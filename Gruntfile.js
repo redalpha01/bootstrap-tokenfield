@@ -74,8 +74,8 @@ module.exports = function (grunt) {
             'exec:git_commit:' + version,
             'exec:git_tag:' + version,
             'exec:update_docs'
-            //'exec:git_push',
-            //'exec:npm_publish',
+            // 'exec:git_push',
+            // 'exec:npm_publish',
         ]);
     });
 
