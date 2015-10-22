@@ -240,22 +240,11 @@
             var $tokenLabel = $token.find('.token-label'),
                 $closeButton = $token.find('.close');
 
-            // Determine maximum possible token label width
+            // Todo: Determine maximum possible token label width
+            // Previous method does not work in FF
+            // Refactor this!
             if (!this.maxTokenWidth) {
-                this.maxTokenWidth =
-                    this.$wrapper.width() - $closeButton.outerWidth() -
-                    parseInt($closeButton.css('margin-left'), 10) -
-                    parseInt($closeButton.css('margin-right'), 10) -
-                    parseInt($token.css('border-left-width'), 10) -
-                    parseInt($token.css('border-right-width'), 10) -
-                    parseInt($token.css('padding-left'), 10) -
-                    parseInt($token.css('padding-right'), 10) -
-                    parseInt($tokenLabel.css('border-left-width'), 10) -
-                    parseInt($tokenLabel.css('border-right-width'), 10) -
-                    parseInt($tokenLabel.css('padding-left'), 10) -
-                    parseInt($tokenLabel.css('padding-right'), 10) -
-                    parseInt($tokenLabel.css('margin-left'), 10) -
-                    parseInt($tokenLabel.css('margin-right'), 10);
+                this.maxTokenWidth = this.$wrapper.width() - $closeButton.width() - 10;
             }
 
             $tokenLabel.css('max-width', this.maxTokenWidth);
