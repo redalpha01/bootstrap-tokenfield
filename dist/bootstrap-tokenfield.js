@@ -140,25 +140,15 @@
         }
 
         // Set up mirror for input auto-sizing
-        this.$mirror = $('<span style="position:absolute; top:-999px; left:0; white-space:pre;"/>');
+        this.$mirror = $('<span style="position:absolute;top:-9999px;left:-9999px;white-space:pre;"/>');
         this.$input.css('min-width', this.options.minWidth + 'px');
-        $.each([
-            'fontFamily',
-            'fontSize',
-            'fontWeight',
-            'fontStyle',
-            'letterSpacing',
-            'textTransform',
-            'wordSpacing',
-            'textIndent'
-        ], function (i, val) {
-            _self.$mirror[0].style[val] = _self.$input.css(val);
-        });
-        this.$mirror.appendTo('body');
 
         // Insert tokenfield to HTML
         this.$wrapper.insertBefore(this.$element);
         this.$element.prependTo(this.$wrapper);
+
+        // Append mirror to tokenfield wrapper
+        this.$mirror.appendTo(this.$wrapper);
 
         // Calculate inner input width
         this.update();
