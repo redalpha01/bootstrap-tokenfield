@@ -820,15 +820,15 @@
 
         remove: function (e, direction) {
             if (this.$input.is(document.activeElement) || this._disabled || this._readonly) return;
-
-            var $token = (e.type === 'click') ? $(e.target).closest('.token') : this.$wrapper.find('.token.active');
+            var firstToken,
+                $token = (e.type === 'click') ? $(e.target).closest('.token') : this.$wrapper.find('.token.active');
 
             if (e.type !== 'click') {
                 if (!direction) direction = 'prev';
                 this[direction]();
 
                 // Was it the first token?
-                if (direction === 'prev') var firstToken = $token.first().prevAll('.token:first').length === 0;
+                if (direction === 'prev') firstToken = $token.first().prevAll('.token:first').length === 0;
             }
 
             // Prepare events and their options
