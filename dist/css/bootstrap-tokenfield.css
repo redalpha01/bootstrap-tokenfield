@@ -182,13 +182,13 @@
 .tokenfield.input-lg .token {
   height: 25px;
 }
-.input-group-lg .token-label,
-.tokenfield.input-lg .token-label {
-  line-height: 23px;
-}
 .input-group-lg .token .close,
 .tokenfield.input-lg .token .close {
   line-height: 1.3em;
+}
+.input-group-lg .token-label,
+.tokenfield.input-lg .token-label {
+  line-height: 23px;
 }
 .input-group-lg .token-input,
 .tokenfield.input-lg .token-input {
