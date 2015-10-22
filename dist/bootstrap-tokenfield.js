@@ -7,21 +7,22 @@
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
+        define(['jquery'], function ($) {
+            if (!window) throw new Error('Tokenfield requires a global window object.');
+            factory($, window);
+        });
     } else if (typeof exports === 'object') {
         // For CommonJS and CommonJS-like environments where a window with jQuery
         // is present, execute the factory with the jQuery instance from the window object
         // For environments that do not inherently posses a window with a document
         // (such as Node.js), expose a Tokenfield-making factory as module.exports
-        // This accentuates the need for the creation of a real window or passing in a jQuery instance
-        // e.g. require("bootstrap-tokenfield")(window); or require("bootstrap-tokenfield")($);
+        // This accentuates the need for the creation of a real window
+        // e.g. require("bootstrap-tokenfield")(window);
         module.exports = global.window && global.window.$ ?
-            factory(global.window.$) :
+            factory(global.window.$, global.window) :
             function (input) {
-                if (!input.$ && !input.fn) {
-                    throw new Error('Tokenfield requires a window object with jQuery or a jQuery instance');
-                }
-                return factory(input.$ || input);
+                if (!input && !input.$) throw new Error('Tokenfield requires a window object with jQuery.');
+                return factory(input.$, input);
             };
     } else {
         // Browser globals
