@@ -545,9 +545,10 @@
 
             // Comma
             if ($.inArray(e.which, this._triggerKeys) !== -1 && this.$input.is(document.activeElement)) {
-                if (this.$input.val()) {
-                    this.createTokensFromInput(e);
-                }
+                var val = this.$input.val(),
+                    quoting = /^"[^"]*$/.test(val);
+                if (quoting) return;
+                if (val) this.createTokensFromInput(e);
                 return false;
             }
         },
