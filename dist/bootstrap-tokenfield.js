@@ -7,22 +7,21 @@
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['jquery'], function ($) {
-            if (!window) throw new Error('Tokenfield requires a global window object.');
-            factory($, window);
-        });
+        define(['jquery'], factory);
     } else if (typeof exports === 'object') {
         // For CommonJS and CommonJS-like environments where a window with jQuery
         // is present, execute the factory with the jQuery instance from the window object
         // For environments that do not inherently posses a window with a document
         // (such as Node.js), expose a Tokenfield-making factory as module.exports
-        // This accentuates the need for the creation of a real window
-        // e.g. require("bootstrap-tokenfield")(window);
+        // This accentuates the need for the creation of a real window or passing in a jQuery instance
+        // e.g. require("bootstrap-tokenfield")(window); or require("bootstrap-tokenfield")($);
         module.exports = global.window && global.window.$ ?
-            factory(global.window.$, global.window) :
+            factory(global.window.$) :
             function (input) {
-                if (!input && !input.$) throw new Error('Tokenfield requires a window object with jQuery.');
-                return factory(input.$, input);
+                if (!input.$ && !input.fn) {
+                    throw new Error('Tokenfield requires a window object with jQuery or a jQuery instance');
+                }
+                return factory(input.$ || input);
             };
     } else {
         // Browser globals
@@ -70,18 +69,8 @@
         });
 
         // Store original input width
-        var elRules = (window && typeof window.getMatchedCSSRules === 'function') ? window.getMatchedCSSRules(element) : null,
-            elStyleWidth = element.style.width,
-            elCSSWidth,
+        var elStyleWidth = element.style.width,
             elWidth = this.$element.width();
-
-        if (elRules) {
-            $.each(elRules, function (i, rule) {
-                if (rule.style.width) {
-                    elCSSWidth = rule.style.width;
-                }
-            });
-        }
 
         // Move original input out of the way
         var hidingPosition = $('body').css('direction') === 'rtl' ? 'right' : 'left',
@@ -123,8 +112,6 @@
         // Set wrapper width
         if (elStyleWidth) {
             this.$wrapper.css('width', elStyleWidth);
-        } else if (elCSSWidth) {
-            this.$wrapper.css('width', elCSSWidth);
         } else if (this.$element.parents('.form-inline').length) {
             // If input is inside inline-form with no width set, set fixed width
             this.$wrapper.width(elWidth);
@@ -546,9 +533,10 @@
 
             // Comma
             if ($.inArray(e.which, this._triggerKeys) !== -1 && this.$input.is(document.activeElement)) {
-                if (this.$input.val()) {
-                    this.createTokensFromInput(e);
-                }
+                var val = this.$input.val(),
+                    quoting = /^"[^"]*$/.test(val);
+                if (quoting) return;
+                if (val) this.createTokensFromInput(e);
                 return false;
             }
         },

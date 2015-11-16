@@ -69,18 +69,8 @@
         });
 
         // Store original input width
-        var elRules = (window && typeof window.getMatchedCSSRules === 'function') ? window.getMatchedCSSRules(element) : null,
-            elStyleWidth = element.style.width,
-            elCSSWidth,
+        var elStyleWidth = element.style.width,
             elWidth = this.$element.width();
-
-        if (elRules) {
-            $.each(elRules, function (i, rule) {
-                if (rule.style.width) {
-                    elCSSWidth = rule.style.width;
-                }
-            });
-        }
 
         // Move original input out of the way
         var hidingPosition = $('body').css('direction') === 'rtl' ? 'right' : 'left',
@@ -122,8 +112,6 @@
         // Set wrapper width
         if (elStyleWidth) {
             this.$wrapper.css('width', elStyleWidth);
-        } else if (elCSSWidth) {
-            this.$wrapper.css('width', elCSSWidth);
         } else if (this.$element.parents('.form-inline').length) {
             // If input is inside inline-form with no width set, set fixed width
             this.$wrapper.width(elWidth);
