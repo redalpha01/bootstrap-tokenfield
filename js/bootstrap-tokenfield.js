@@ -211,7 +211,7 @@
 
             var $token = $('<div class="token" />')
                   .append('<span class="token-label" />')
-                  .append('<a href="#" class="close" tabindex="-1">&times;</a>')
+                  .append('<a href="#" class="close" tabindex="-1" aria-label="Remove">&times;</a>')
                   .data('attrs', attrs);
 
             // Insert token into HTML
@@ -365,7 +365,6 @@
 
         listen: function () {
             var _self = this;
-
             this.$element
                 .on('change.tokenfield', $.proxy(this.change, this));
 
@@ -471,6 +470,9 @@
                     // Create token
                     if (this.$input.is(document.activeElement) && this.$input.val().length || this.$input.data('edit')) {
                         return this.createTokensFromInput(e, this.$input.data('edit'));
+                    } else if (this.$input.is(document.activeElement)) {
+                        e.preventDefault();
+                        this.$element.trigger('tokenfield:next');
                     }
 
                     // Edit token
