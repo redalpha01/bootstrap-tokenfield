@@ -470,7 +470,7 @@
                     // Create token
                     if (this.$input.is(document.activeElement) && this.$input.val().length || this.$input.data('edit')) {
                         return this.createTokensFromInput(e, this.$input.data('edit'));
-                    } else if (this.$input.is(document.activeElement)) {
+                    } else if (this.$input.is(document.activeElement) && (e.keyCode === 13)) {
                         e.preventDefault();
                         this.$element.trigger('tokenfield:next');
                     }
