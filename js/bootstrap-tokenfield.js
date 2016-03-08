@@ -1,7 +1,7 @@
 /*!
  * bootstrap-tokenfield
- * https://github.com/sliptree/bootstrap-tokenfield
- * Copyright 2013-2014 Sliptree and other contributors; Licensed MIT
+ * https://github.com/Open-Xchange-Frontend/bootstrap-tokenfield
+ * Copyright 2013-2016 Sliptree and other contributors; Licensed MIT
  */
 
 (function (factory) {
