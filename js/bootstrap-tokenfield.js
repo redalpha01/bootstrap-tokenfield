@@ -228,15 +228,6 @@
             var $tokenLabel = $token.find('.token-label'),
                 $closeButton = $token.find('.close');
 
-            // Todo: Determine maximum possible token label width
-            // Previous method does not work in FF
-            // Refactor this!
-            if (!this.maxTokenWidth) {
-                this.maxTokenWidth = this.$wrapper.width() - $closeButton.width() - 10;
-            }
-
-            $tokenLabel.css('max-width', this.maxTokenWidth);
-
             if (this.options.html) {
                 $tokenLabel.html(attrs.label);
             } else {
@@ -282,6 +273,11 @@
 
             // Update tokenfield dimensions
             setTimeout(function () {
+                if (!_self.maxTokenWidth) {
+                    _self.maxTokenWidth = _self.$wrapper.width() - $closeButton.width() - 10;
+                }
+
+                $tokenLabel.css('max-width', _self.maxTokenWidth);
                 _self.update();
             }, 0);
 
