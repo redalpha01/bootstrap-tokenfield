@@ -44,6 +44,7 @@
     this.options = $.extend(true, {}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, this.$element.data(), options)
 
     // Setup delimiters and trigger keys
+    this._allowUnmatchedQuotes =  this.options.allowUnmatchedQuotes;
     this._delimiters = (typeof this.options.delimiter === 'string') ? [this.options.delimiter] : this.options.delimiter
     this._triggerKeys = $.map(this._delimiters, function (delimiter) {
       return delimiter.charCodeAt(0);
@@ -333,7 +334,15 @@
       if (typeof tokens === 'string') {
         if (this._delimiters.length) {
           // Split based on delimiters
-          tokens = tokens.split( new RegExp( '[' + this._delimiters.join('') + ']' ) )
+          if (this._allowUnmatchedQuotes){
+            tokens = tokens.split( new RegExp( '[' + this._delimiters.join('') + ']' ) );
+          } else {
+            if (tokens.startsWith('"') && tokens.endsWith('"')){
+              tokens = [tokens];
+            } else {
+                tokens = tokens.split( new RegExp( '[' + this._delimiters.join('') + ']' ) );
+            }
+          }
         } else {
           tokens = [tokens];
         }
@@ -383,7 +392,7 @@
   , getInput: function() {
     return this.$input.val()
   }
-      
+
   , setInput: function (val) {
       if (this.$input.hasClass('tt-input')) {
           // Typeahead acts weird when simply setting input value to empty,
@@ -564,10 +573,19 @@
 
       // Comma
       if ($.inArray( e.which, this._triggerKeys) !== -1 && this.$input.is(document.activeElement)) {
-        if (this.$input.val()) {
-          this.createTokensFromInput(e)
+        if (!this._allowUnmatchedQuotes){
+          if (( this.$input.val().startsWith('"') && this.$input.val().endsWith('"') ) || !this.$input.val().startsWith('"')){
+            if (this.$input.val()) {
+              this.createTokensFromInput(e)
+            }
+            return false;
+          }
+        } else {
+          if (this.$input.val()) {
+            this.createTokensFromInput(e)
+          }
+          return false;
         }
-        return false;
       }
     }
 
@@ -893,7 +911,7 @@
       else {
         //temporary reset width to minimal value to get proper results
         this.$input.width(this.options.minWidth);
-        
+
         var w = (this.textDirection === 'rtl')
               ? this.$input.offset().left + this.$input.outerWidth() - this.$wrapper.offset().left - parseInt(this.$wrapper.css('padding-left'), 10) - inputPadding - 1
               : this.$wrapper.offset().left + this.$wrapper.width() + parseInt(this.$wrapper.css('padding-left'), 10) - this.$input.offset().left - inputPadding;
@@ -1022,6 +1040,7 @@
     showAutocompleteOnFocus: false,
     createTokensOnBlur: false,
     delimiter: ',',
+    allowUnmatchedQuotes: true,
     beautify: true,
     inputType: 'text'
   }
