@@ -614,6 +614,8 @@
           this.remove(e, 'next')
           break
       }
+      var keyupEvent = $.Event('tokenfield:keyup', { attrs: this.$input.val() });
+      this.$element.trigger( keyupEvent )
       this.lastKeyUp = e.keyCode
     }
 
