@@ -453,6 +453,9 @@
         })
         .on('typeahead:selected typeahead:autocompleted', function (e, datum, dataset) {
           // Create token
+          if(!_self.options._allowUnmatchedQuotes){
+             datum.value = '"'+datum.value+'"'; //typeahead values get surrounded in quote
+          }
           if (_self.createToken( datum )) {
             _self.$input.typeahead('val', '')
             if (_self.$input.data( 'edit' )) {
