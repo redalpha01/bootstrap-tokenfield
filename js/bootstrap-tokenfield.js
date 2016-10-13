@@ -142,7 +142,7 @@
 
     // Set up mirror for input auto-sizing
     this.$mirror = $('<span style="position:absolute; top:-999px; left:0; white-space:pre;"/>');
-    this.$input.css('min-width', this.options.minWidth + 'px')
+    //this.$input.css('min-width', this.options.minWidth + 'px')
     $.each([
         'fontFamily',
         'fontSize',
@@ -260,11 +260,11 @@
           parseInt($token.css('border-left-width'), 10) -
           parseInt($token.css('border-right-width'), 10) -
           parseInt($token.css('padding-left'), 10) -
-          parseInt($token.css('padding-right'), 10)
+          parseInt($token.css('padding-right'), 10) -
           parseInt($tokenLabel.css('border-left-width'), 10) -
           parseInt($tokenLabel.css('border-right-width'), 10) -
           parseInt($tokenLabel.css('padding-left'), 10) -
-          parseInt($tokenLabel.css('padding-right'), 10)
+          parseInt($tokenLabel.css('padding-right'), 10) -
           parseInt($tokenLabel.css('margin-left'), 10) -
           parseInt($tokenLabel.css('margin-right'), 10)
       }
