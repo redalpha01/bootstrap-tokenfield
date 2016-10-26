@@ -337,7 +337,7 @@
           if (this._allowUnmatchedQuotes){
             tokens = tokens.split( new RegExp( '[' + this._delimiters.join('') + ']' ) );
           } else {
-            if (tokens.startsWith('"') && tokens.endsWith('"')){
+            if (tokens.includes('"') && tokens.endsWith('"')){
               tokens = [tokens];
             } else {
                 tokens = tokens.split( new RegExp( '[' + this._delimiters.join('') + ']' ) );
@@ -577,7 +577,7 @@
       // Comma
       if ($.inArray( e.which, this._triggerKeys) !== -1 && this.$input.is(document.activeElement)) {
         if (!this._allowUnmatchedQuotes){
-          if (( this.$input.val().startsWith('"') && this.$input.val().endsWith('"') ) || !this.$input.val().startsWith('"')){
+          if (( this.$input.val().includes('"') && this.$input.val().endsWith('"') ) || !this.$input.val().includes('"')){
             if (this.$input.val()) {
               this.createTokensFromInput(e)
             }
