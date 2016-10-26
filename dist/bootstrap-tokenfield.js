@@ -660,6 +660,8 @@
       // Add tokens to existing ones
       if (_self.options.allowPasting) {
         setTimeout(function () {
+          var value = _self.$input.val();
+          _self.$input.val('"'+value+'"');
           _self.createTokensFromInput(e)
         }, 1)
       }
