@@ -927,6 +927,12 @@
         // dimensions returned by jquery will be NaN -> we default to 100%
         // so placeholder won't be cut off.
         isNaN(w) ? this.$input.width('100%') : this.$input.width(w);
+		
+		// Prepare events and their options
+		var options = { width: this.$input.width() }
+		, updateEvent = $.Event('tokenfield:updateWidth', options)
+
+		this.$element.trigger(updateEvent);
       }
     }
 
