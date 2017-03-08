@@ -232,7 +232,7 @@
       // Bail out if there if attributes are empty or event was defaultPrevented
       if (!createEvent.attrs || createEvent.isDefaultPrevented()) return
 
-      var $token = $('<div class="token" />')
+      var $token = $('<div class="token" title="'+attrs.title+'"/>')
             .append('<span class="token-label" />')
             .append('<a href="#" class="close" tabindex="-1" draggable="false">&times;</a>')
             .data('attrs', attrs)
@@ -625,7 +625,6 @@
   , focus: function (e) {
       this.focused = true
       this.$wrapper.addClass('focus')
-
       if (this.$input.is(document.activeElement)) {
         this.$wrapper.find('.active').removeClass('active')
         this.$firstActiveToken = null
@@ -634,6 +633,8 @@
           this.search()
         }
       }
+	  var focusEvent = $.Event('tokenfield:focus', {} );
+	  this.$element.trigger( focusEvent );
     }
 
   , blur: function (e) {
@@ -1056,7 +1057,8 @@
     delimiter: ',',
     allowUnmatchedQuotes: true,
     beautify: true,
-    inputType: 'text'
+    inputType: 'text',
+	title:""
   }
 
   $.fn.tokenfield.Constructor = Tokenfield
