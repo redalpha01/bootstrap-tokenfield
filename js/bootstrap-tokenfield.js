@@ -232,7 +232,8 @@
       // Bail out if there if attributes are empty or event was defaultPrevented
       if (!createEvent.attrs || createEvent.isDefaultPrevented()) return
 
-      var $token = $('<div class="token" title="'+attrs.title+'"/>')
+      var $token = $('<div class="token">')
+		    .attr("title", attrs.title)
             .append('<span class="token-label" />')
             .append('<a href="#" class="close" tabindex="-1" draggable="false">&times;</a>')
             .data('attrs', attrs)
