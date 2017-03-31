@@ -43,7 +43,8 @@
         this.options = $.extend(true, {}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, this.$element.data(), options);
 
         // Setup delimiters and trigger keys
-        this._delimiters = (typeof this.options.delimiter === 'string') ? [this.options.delimiter] : this.options.delimiter;
+        this._allowUnmatchedQuotes =  this.options.allowUnmatchedQuotes;
+        this._delimiters = (typeof this.options.delimiter === 'string') ? [this.options.delimiter] : this.options.delimiter
         this._triggerKeys = $.map(this._delimiters, function (delimiter) {
             return delimiter.charCodeAt(0);
         });
@@ -86,11 +87,10 @@
             .prop('tabindex', -1);
 
         // Create a wrapper
-        this.$wrapper = $('<div class="tokenfield form-control" />');
-
-        if (this.$element.hasClass('input-lg')) this.$wrapper.addClass('input-lg');
-        if (this.$element.hasClass('input-sm')) this.$wrapper.addClass('input-sm');
-        if (this.textDirection === 'rtl') this.$wrapper.addClass('rtl');
+        this.$wrapper = $('<div class="'+this.options.className+' form-control" />')
+        if (this.$element.hasClass('input-lg')) this.$wrapper.addClass('input-lg')
+        if (this.$element.hasClass('input-sm')) this.$wrapper.addClass('input-sm')
+        if (this.textDirection === 'rtl') this.$wrapper.addClass('rtl')
 
         // Create a new input
         var id = this.$element.prop('id') || new Date().getTime() + '' + Math.floor((1 + Math.random()) * 100);
@@ -209,10 +209,11 @@
             // Bail out if there if attributes are empty or event was defaultPrevented
             if (!createEvent.attrs || createEvent.isDefaultPrevented()) return;
 
-            var $token = $('<div class="token" />')
-                  .append('<span class="token-label" />')
-                  .append('<a href="#" class="close" tabindex="-1" aria-label="Remove">&times;</a>')
-                  .data('attrs', attrs);
+            var $token = $('<div class="token">')
+                .attr("title", attrs.title)
+                .append('<span class="token-label" />')
+                .append('<a href="#" class="close" tabindex="-1" draggable="false">&times;</a>')
+                .data('attrs', attrs)
 
             // Insert token into HTML
             if (this.$input.hasClass('tt-input')) {
@@ -297,7 +298,15 @@
             if (typeof tokens === 'string') {
                 if (this._delimiters.length) {
                     // Split based on delimiters
-                    tokens = tokens.split(new RegExp('[' + this._delimiters.join('') + ']'));
+                    if (this._allowUnmatchedQuotes){
+                        tokens = tokens.split( new RegExp( '[' + this._delimiters.join('') + ']' ) );
+                    } else {
+                        if (tokens.includes('"') && tokens.endsWith('"')){
+                            tokens = [tokens];
+                        } else {
+                            tokens = tokens.split( new RegExp( '[' + this._delimiters.join('') + ']' ) );
+                        }
+                    }
                 } else {
                     tokens = [tokens];
                 }
@@ -407,6 +416,9 @@
                 })
                 .on('typeahead:selected typeahead:autocompleted', function (e, datum, dataset) {
                     // Create token
+                    if(!_self.options._allowUnmatchedQuotes){
+                        datum.value = '"'+datum.value+'"'; //typeahead values get surrounded in quote
+                    }
                     if (_self.createToken(datum)) {
                         _self.$input.typeahead('val', '');
                         if (_self.$input.data('edit')) {
@@ -530,12 +542,20 @@
         keypress: function (e) {
 
             // Comma
-            if ($.inArray(e.which, this._triggerKeys) !== -1 && this.$input.is(document.activeElement)) {
-                var val = this.$input.val(),
-                    quoting = /^"[^"]*$/.test(val);
-                if (quoting) return;
-                if (val) this.createTokensFromInput(e);
-                return false;
+            if ($.inArray( e.which, this._triggerKeys) !== -1 && this.$input.is(document.activeElement)) {
+                if (!this._allowUnmatchedQuotes){
+                    if (( this.$input.val().includes('"') && this.$input.val().endsWith('"') ) || !this.$input.val().includes('"')){
+                        if (this.$input.val()) {
+                            this.createTokensFromInput(e)
+                        }
+                        return false;
+                    }
+                } else {
+                    if (this.$input.val()) {
+                        this.createTokensFromInput(e)
+                    }
+                    return false;
+                }
             }
         },
 
@@ -561,26 +581,27 @@
                     break;
 
                 case 46: // delete
-                    this.remove(e, 'next');
+                    this.remove(e, 'next')
                     break;
-
-                // no default
             }
-            this.lastKeyUp = e.keyCode;
+            var keyupEvent = $.Event('tokenfield:keyup', { attrs: this.$input.val() });
+            this.$element.trigger( keyupEvent )
+            this.lastKeyUp = e.keyCode
         },
 
         focus: function (e) {
-            this.focused = true;
+            this.focused = true
             this.$wrapper.addClass('focus');
-
             if (this.$input.is(document.activeElement)) {
-                this.$wrapper.find('.active').removeClass('active');
+                this.$wrapper.find('.active').removeClass('active')
                 this.$firstActiveToken = null;
 
                 if (this.options.showAutocompleteOnFocus) {
                     this.search();
                 }
             }
+            var focusEvent = $.Event('tokenfield:focus', {} );
+            this.$element.trigger( focusEvent );
         },
 
         blur: function (e) {
@@ -606,6 +627,8 @@
             // Add tokens to existing ones
             if (_self.options.allowPasting) {
                 setTimeout(function () {
+                    var value = _self.$input.val();
+                    _self.$input.val('"'+value+'"');
                     _self.createTokensFromInput(e);
                 }, 1);
             }
@@ -856,7 +879,6 @@
             } else {
                 // temporary reset width to minimal value to get proper results
                 this.$input.width(this.options.minWidth);
-
                 var w = (this.textDirection === 'rtl')
                       ? this.$input.offset().left + this.$input.outerWidth() - this.$wrapper.offset().left - parseInt(this.$wrapper.css('padding-left'), 10) - inputPadding - 1
                       : this.$wrapper.offset().left + this.$wrapper.width() + parseInt(this.$wrapper.css('padding-left'), 10) - this.$input.offset().left - inputPadding;
@@ -869,23 +891,29 @@
                 } else {
                     this.$input.width(w);
                 }
+
+                // Prepare events and their options
+                var options = { width: this.$input.width() }
+                , updateEvent = $.Event('tokenfield:updateWidth', options)
+
+                this.$element.trigger(updateEvent);
             }
         },
         focusInput: function (e) {
-            if ($(e.target).closest('.token').length || $(e.target).closest('.token-input').length || $(e.target).closest('.tt-dropdown-menu').length) return;
+            if ($(e.target).closest('.token').length || $(e.target).closest('.token-input').length || $(e.target).closest('.tt-dropdown-menu').length ) return
             // Focus only after the current call stack has cleared,
             // otherwise has no effect.
             // Reason: mousedown is too early - input will lose focus
             // after mousedown. However, since the input may be moved
             // in DOM, there may be no click or mouseup event triggered.
-            var _self = this;
-            setTimeout(function () {
-                _self.$input.focus();
+            var _self = this
+            setTimeout(function() {
+                _self.$input.focus()
             }, 0);
         },
         search: function () {
             if (this.$input.data('ui-autocomplete')) {
-                this.$input.autocomplete('search');
+                this.$input.autocomplete('search')
             }
         },
         disable: function () {
@@ -974,6 +1002,7 @@
     };
 
     $.fn.tokenfield.defaults = {
+        className: 'tokenfield',
         minWidth: 60,
         minLength: 0,
         html: true,
@@ -985,8 +1014,10 @@
         showAutocompleteOnFocus: false,
         createTokensOnBlur: false,
         delimiter: ',',
+        allowUnmatchedQuotes: true,
         beautify: true,
-        inputType: 'text'
+        inputType: 'text',
+        title:""
     };
 
     $.fn.tokenfield.Constructor = Tokenfield;
